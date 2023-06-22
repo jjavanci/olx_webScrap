@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import pandas as pd
 
 url = 'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/estado-sp'
 
@@ -12,6 +13,14 @@ soup = BeautifulSoup(site.content, 'html.parser')
 carros = soup.find_all('div', class_='hrShZb')
 
 #ultima_pagina = soup.find_all('span', class_='sc-1bofr6e-1 hEtrnt sc-ifAKCX bVUFRk')[-1]
+
+list_link_carro = []
+list_nome_carro = []
+list_preco_carro = []
+list_info_carro = []
+list_info_carro1 = []
+list_info_carro2 = []
+list_info_carro3 = []
 
 i = 0
 
@@ -33,10 +42,10 @@ for carro in carros:
         info_carro1 = "n/c"
         info_carro2 = "n/c"
         info_carro3 = "n/c"
-        print("IndexError")
+        #print("IndexError")
 
     i += 1
-    print(url)
+    """print(url)
     print(link_carro.get('href'))
     print()
     print(nome_carro)
@@ -48,7 +57,16 @@ for carro in carros:
     print(info_carro2)
     print(info_carro3)
     print()
-    print('####################################################################################################################')
+    print('####################################################################################################################')"""
+
+    list_link_carro.append(link_carro.get('href'))
+    list_nome_carro.append(nome_carro)
+    list_preco_carro.append(preco_carro)
+    list_info_carro.append(info_carro)
+    list_info_carro1.append(info_carro1)
+    list_info_carro2.append(info_carro2)
+    list_info_carro3.append(info_carro3)
+
 
 print(str(i) + ' anúncios')
 print('FIM PÁGINA 1')
@@ -57,7 +75,7 @@ print('FIM PÁGINA 1')
 for i in range(2, 101):
     
     url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/estado-sp?o={i}'
-    print(url)
+    #print(url)
     site = requests.get(url, headers=headers)
     soup = BeautifulSoup(site.content, 'html.parser')
     carros = soup.find_all('div', class_='hrShZb')
@@ -80,8 +98,8 @@ for i in range(2, 101):
             info_carro1 = "n/c"
             info_carro2 = "n/c"
             info_carro3 = "n/c"
-            print("IndexError")
-
+            #print("IndexError")
+        """
         print(url)
         print(link_carro.get('href'))
         print()
@@ -94,6 +112,31 @@ for i in range(2, 101):
         print(info_carro2)
         print(info_carro3)
         print()
-        print('####################################################################################################################')
+        print('####################################################################################################################')"""
+
+        list_link_carro.append(link_carro.get('href'))
+        list_nome_carro.append(nome_carro)
+        list_preco_carro.append(preco_carro)
+        list_info_carro.append(info_carro)
+        list_info_carro1.append(info_carro1)
+        list_info_carro2.append(info_carro2)
+        list_info_carro3.append(info_carro3)
     
     print('####Página ' + str(i))
+""""
+print(list_link_carro)
+print(list_nome_carro)
+print(list_preco_carro)
+print(list_info_carro)
+print(list_info_carro1)
+print(list_info_carro2)
+print(list_info_carro3)"""
+
+anuncios_carro_dict = {'link': list_link_carro, 'nome': list_nome_carro, 'preco': list_preco_carro, 'info':list_info_carro, 'info1': list_info_carro1, 'info2':list_info_carro2, 'info3': list_info_carro3}
+#print(anuncios_carro_dict)
+#print(type(anuncios_carro_dict))
+
+df = pd.DataFrame(anuncios_carro_dict)
+print(df)
+
+df.to_csv('anúncios.csv', index=False)
