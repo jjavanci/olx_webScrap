@@ -18,7 +18,7 @@ def extract_car_info(anuncio):
         link = anuncio.find('a', class_='gIhjul')['href']
         nome = anuncio.find('h2', class_='hUnWqk').get_text()
         preco = anuncio.find('h3', class_='bytyxL').get_text()
-        info = [anuncio.findAll('span')[0].get_text()[:-3], anuncio.findAll('span')[1].get_text(), anuncio.findAll('span')[2].get_text(), anuncio.findAll('span')[3].get_text()]
+        info = [anuncio.findAll('span')[0].get_text(), anuncio.findAll('span')[1].get_text(), anuncio.findAll('span')[2].get_text(), anuncio.findAll('span')[3].get_text()]
         km = info[0]
         ano = info[1]
         combustivel = info[2]
@@ -44,6 +44,19 @@ def extract_car_info(anuncio):
         'cambio': cambio
     }
 
+def data_cleaning(anuncios):
+
+    anuncios['preco'] = anuncios['preco'].str[3:]
+    anuncios['km'] = anuncios['km'].str[:-4]
+    
+    # Remover caracteres não numéricos da coluna 'preco'
+    df['preco'] = df['preco'].str.replace(r'\D', '', regex=True)
+    df['km'] = df['km'].str.replace(r'\D', '', regex=True)
+
+    # Converter a coluna 'preco' para o tipo inteiro
+    df['preco'] = pd.to_numeric(df['preco'], errors='coerce', downcast='integer')
+    df['km'] = pd.to_numeric(df['km'], errors='coerce', downcast='integer')
+
 url = 'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/vw-volkswagen/gol/estado-sp?rs='
 site = make_request(url)
 anuncios = parse_html(site.content)
@@ -56,9 +69,10 @@ for anuncio in anuncios:
 
 print('###PÁGINA 1###')
 print(len(anuncios_info))
+#print(anuncios_info)
 
 #Código para as demais páginas
-for i in range(2, 101):
+for i in range(2, 3):
     url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/vw-volkswagen/gol/estado-sp?o={i}'
     site = make_request(url)
     anuncios = parse_html(site.content)
@@ -74,5 +88,9 @@ print(len(anuncios_info))
 
 
 df = pd.DataFrame(anuncios_info)
-print(df)
+print(df.dtypes)
+data_cleaning(df)
+print()
+print(df.dtypes)
+print(df['km'])
 df.to_csv('carros.csv', index=False)
