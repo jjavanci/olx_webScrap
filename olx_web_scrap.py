@@ -46,6 +46,8 @@ def extract_car_info(anuncio):
 
 def data_cleaning(anuncios):
 
+    anuncios['nome'] = anuncios['nome'].str.upper()
+    
     anuncios['preco'] = anuncios['preco'].str[3:]
     anuncios['km'] = anuncios['km'].str[:-4]
     
@@ -57,7 +59,22 @@ def data_cleaning(anuncios):
     df['preco'] = pd.to_numeric(df['preco'], errors='coerce', downcast='integer')
     df['km'] = pd.to_numeric(df['km'], errors='coerce', downcast='integer')
 
-url = 'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/vw-volkswagen/gol/estado-sp?rs='
+    # Preencher NaNs com um valor padrão (por exemplo, 0)
+    df['preco'].fillna(0, inplace=True)
+    df['km'].fillna(0, inplace=True)
+
+    # Converter a coluna 'preco' para um tipo inteiro
+    df['preco'] = df['preco'].astype(int)
+    df['km'] = df['preco'].astype(int)
+
+
+modelo = 'vw-volkswagen'
+carro = 'gol'
+regiao = 'grande-campinas'
+qts_paginas = 2
+
+
+url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/{modelo}/{carro}/estado-sp/{regiao}'
 site = make_request(url)
 anuncios = parse_html(site.content)
 
@@ -69,11 +86,10 @@ for anuncio in anuncios:
 
 print('###PÁGINA 1###')
 print(len(anuncios_info))
-#print(anuncios_info)
 
 #Código para as demais páginas
-for i in range(2, 3):
-    url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/vw-volkswagen/gol/estado-sp?o={i}'
+for i in range(2, qts_paginas):
+    url = f'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios/{modelo}/{carro}/estado-sp/{regiao}?o={i}'
     site = make_request(url)
     anuncios = parse_html(site.content)
 
@@ -92,5 +108,9 @@ print(df.dtypes)
 data_cleaning(df)
 print()
 print(df.dtypes)
-print(df['km'])
-df.to_csv('carros.csv', index=False)
+print(df['preco'])
+
+csv_name = regiao + '.csv'
+
+df['regiao'] = [csv_name] * len(df['nome'])
+df.to_csv(csv_name, index=False)
