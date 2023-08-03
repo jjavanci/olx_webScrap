@@ -11,6 +11,7 @@ def make_request(url):
 def parse_html(html, tag, a_class):
     soup = BeautifulSoup(html, 'html.parser')
     anuncios = soup.find_all(tag, class_= a_class)
+
     return anuncios
 
 def extract_car_info(infos, link, ano, km):
@@ -58,33 +59,50 @@ def scrapy_initial_page(regiao, modelo, carro):
         a_class = 'eCUDNu'
         infos = parse_html(site.content, tag, a_class)
         
-        
-        info = infos[0]
-    
-        nome = obter_elemento_texto(info, 'h1', 'bYQcLm')
-        preco_atual = obter_elemento_texto(info, 'h2', 'ad__sc-1leoitd-0 bJHaGt sc-hSdWYo dDGSHH')
-        preco_anunciado = obter_elemento_texto(info, 'span', 'ad__sc-1leoitd-1 bMUiTp sc-hSdWYo htqcWR')
-        model = obter_elemento_texto(info, 'a', 'sc-EHOje lePqYm')
-        
-        print(f'Regiao: {regiao}')
-        print(f'Link: {link}')
-        print(f'Nome: {nome}')
-        print(f'km: {km}')
-        print(f'Ano: {ano}')
-        print(f'Preço Atual: {preco_atual}')
-        print(f'Preço Anunciado: {preco_anunciado}')
-        print(f'Modelo: {model}')
-        
-        anuncio = {
-            'Regiao': regiao,
-            'Link': link,
-            'Nome': nome,
-            'km': km,
-            'Ano': ano,
-            'Preço Atual': preco_atual,
-            'Preço Anunciado': preco_anunciado,
-            'Modelo': model
+        if infos == []:
+            print('Erro')
+            print('Erro')
+            print('Erro')
+            print('Erro')
+            print('Erro')
+            anuncio = {
+            'Regiao': None,
+            'Link': None,
+            'Nome': None,
+            'km': None,
+            'Ano': None,
+            'Preço Atual': None,
+            'Preço Anunciado': None,
+            'Modelo': None
         }
+        else:
+
+            info = infos[0]
+    
+            nome = obter_elemento_texto(info, 'h1', 'bYQcLm')
+            preco_atual = obter_elemento_texto(info, 'h2', 'ad__sc-1leoitd-0 bJHaGt sc-hSdWYo dDGSHH')
+            preco_anunciado = obter_elemento_texto(info, 'span', 'ad__sc-1leoitd-1 bMUiTp sc-hSdWYo htqcWR')
+            model = obter_elemento_texto(info, 'a', 'sc-EHOje lePqYm')
+        
+            print(f'Regiao: {regiao}')
+            print(f'Link: {link}')
+            print(f'Nome: {nome}')
+            print(f'km: {km}')
+            print(f'Ano: {ano}')
+            print(f'Preço Atual: {preco_atual}')
+            print(f'Preço Anunciado: {preco_anunciado}')
+            print(f'Modelo: {model}')
+        
+            anuncio = {
+                'Regiao': regiao,
+                'Link': link,
+                'Nome': nome,
+                'km': km,
+                'Ano': ano,
+                'Preço Atual': preco_atual,
+                'Preço Anunciado': preco_anunciado,
+                'Modelo': model
+            }
             
         data.append(anuncio)
     
@@ -114,35 +132,52 @@ def scrapy_other_pages(regiao, modelo, carro, pages):
         tag = 'div'
         a_class = 'eCUDNu'
         infos = parse_html(site.content, tag, a_class)
-        print(f'Infos: {len(infos)}')
-        print(f'Infos[0]: {len(infos[0])}')
-        info = infos[0]
-        
-    
-        nome = obter_elemento_texto(info, 'h1', 'bYQcLm')
-        preco_atual = obter_elemento_texto(info, 'h2', 'ad__sc-1leoitd-0 bJHaGt sc-hSdWYo dDGSHH')
-        preco_anunciado = obter_elemento_texto(info, 'span', 'ad__sc-1leoitd-1 bMUiTp sc-hSdWYo htqcWR')
-        model = obter_elemento_texto(info, 'a', 'sc-EHOje lePqYm')
-        
-        print(f'Regiao: {regiao}')
-        print(f'Link: {link}')
-        print(f'Nome: {nome}')
-        print(f'km: {km}')
-        print(f'Ano: {ano}')
-        print(f'Preço Atual: {preco_atual}')
-        print(f'Preço Anunciado: {preco_anunciado}')
-        print(f'Modelo: {model}')
-        
-        anuncio = {
-            'Regiao': regiao,
-            'Link': link,
-            'Nome': nome,
-            'km': km,
-            'Ano': ano,
-            'Preço Atual': preco_atual,
-            'Preço Anunciado': preco_anunciado,
-            'Modelo': model
+        print(f'Infos: {type(infos)}')
+
+        if infos == []:
+            print('Erro')
+            print('Erro')
+            print('Erro')
+            print('Erro')
+            print('Erro')
+            anuncio = {
+            'Regiao': None,
+            'Link': None,
+            'Nome': None,
+            'km': None,
+            'Ano': None,
+            'Preço Atual': None,
+            'Preço Anunciado': None,
+            'Modelo': None
         }
+        else:
+
+            info = infos[0]
+    
+            nome = obter_elemento_texto(info, 'h1', 'bYQcLm')
+            preco_atual = obter_elemento_texto(info, 'h2', 'ad__sc-1leoitd-0 bJHaGt sc-hSdWYo dDGSHH')
+            preco_anunciado = obter_elemento_texto(info, 'span', 'ad__sc-1leoitd-1 bMUiTp sc-hSdWYo htqcWR')
+            model = obter_elemento_texto(info, 'a', 'sc-EHOje lePqYm')
+        
+            print(f'Regiao: {regiao}')
+            print(f'Link: {link}')
+            print(f'Nome: {nome}')
+            print(f'km: {km}')
+            print(f'Ano: {ano}')
+            print(f'Preço Atual: {preco_atual}')
+            print(f'Preço Anunciado: {preco_anunciado}')
+            print(f'Modelo: {model}')
+        
+            anuncio = {
+                'Regiao': regiao,
+                'Link': link,
+                'Nome': nome,
+                'km': km,
+                'Ano': ano,
+                'Preço Atual': preco_atual,
+                'Preço Anunciado': preco_anunciado,
+                'Modelo': model
+            }
             
         data.append(anuncio)
             
