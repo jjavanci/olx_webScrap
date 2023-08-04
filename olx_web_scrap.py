@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+from datetime import datetime
 
 def make_request(url):
     headers = {'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"}
@@ -84,14 +85,14 @@ def scrapy_initial_page(regiao, modelo, carro):
             preco_anunciado = obter_elemento_texto(info, 'span', 'ad__sc-1leoitd-1 bMUiTp sc-hSdWYo htqcWR')
             model = obter_elemento_texto(info, 'a', 'sc-EHOje lePqYm')
         
-            print(f'Regiao: {regiao}')
-            print(f'Link: {link}')
-            print(f'Nome: {nome}')
-            print(f'km: {km}')
-            print(f'Ano: {ano}')
-            print(f'Preço Atual: {preco_atual}')
-            print(f'Preço Anunciado: {preco_anunciado}')
-            print(f'Modelo: {model}')
+            #print(f'Regiao: {regiao}')
+            #print(f'Link: {link}')
+            #print(f'Nome: {nome}')
+            #print(f'km: {km}')
+            #print(f'Ano: {ano}')
+            #print(f'Preço Atual: {preco_atual}')
+            #print(f'Preço Anunciado: {preco_anunciado}')
+            #print(f'Modelo: {model}')
         
             anuncio = {
                 'Regiao': regiao,
@@ -159,14 +160,14 @@ def scrapy_other_pages(regiao, modelo, carro, pages):
             preco_anunciado = obter_elemento_texto(info, 'span', 'ad__sc-1leoitd-1 bMUiTp sc-hSdWYo htqcWR')
             model = obter_elemento_texto(info, 'a', 'sc-EHOje lePqYm')
         
-            print(f'Regiao: {regiao}')
-            print(f'Link: {link}')
-            print(f'Nome: {nome}')
-            print(f'km: {km}')
-            print(f'Ano: {ano}')
-            print(f'Preço Atual: {preco_atual}')
-            print(f'Preço Anunciado: {preco_anunciado}')
-            print(f'Modelo: {model}')
+            #print(f'Regiao: {regiao}')
+            #print(f'Link: {link}')
+            #print(f'Nome: {nome}')
+            #print(f'km: {km}')
+            #print(f'Ano: {ano}')
+            #print(f'Preço Atual: {preco_atual}')
+            #print(f'Preço Anunciado: {preco_anunciado}')
+            #print(f'Modelo: {model}')
         
             anuncio = {
                 'Regiao': regiao,
@@ -187,8 +188,8 @@ def scrapy_other_pages(regiao, modelo, carro, pages):
 
 
 data = []
-modelo = 'vw-volkswagen'
-carro = 'gol'
+modelo = 'gm-chevrolet'
+carro = 'spin'
 regioes = [['sao-paulo-e-regiao', round(3440/50)],
             ['vale-do-paraiba-e-litoral-norte', round(894/50)],
             ['baixada-santista-e-litoral-sul', round(306/50)],
@@ -268,3 +269,14 @@ for i in range(2, round(1056/50)+1):
 
 df = pd.DataFrame(data)
 print(df)
+
+# Obter a data atual no formato "YYYY-MM-DD"
+data_atual = datetime.now().strftime("%Y-%m-%d")
+
+# Nomear o arquivo CSV com a data atual
+nome_arquivo = f'data_{data_atual}_{carro}.csv'
+
+# Salvar o DataFrame como arquivo CSV
+df.to_csv(nome_arquivo, index=False)
+
+print(f"DataFrame salvo como {nome_arquivo}")
